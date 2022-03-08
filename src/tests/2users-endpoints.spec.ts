@@ -1,10 +1,14 @@
 import supertest from 'supertest';
 import { deletedUserType, userType } from '../models/user.js';
 import app from '../server.js';
+import  jwt  from 'jsonwebtoken';
 
 const request = supertest(app);
-
+const secretSignture = process.env.SECRET_SIGNTURE as string;
 describe('tests the users endpoints', () => {
+    //creating a new jwt for each time an endpoint testing run that requires jwt authntication.
+    const jwtToken = jwt.sign('just for testing on endpoints', secretSignture);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
     it('tests the POST /users endpoint to create a new user and give back a jwt token', async () => {
         const response = await request.post('/users')
         .send({
@@ -19,7 +23,7 @@ describe('tests the users endpoints', () => {
     /*---------------------------------------------------------------------------------------------------------------------------------*/
     it('tests the GET /users endpoint return all users when providing a valid jwt', async () => {
         const response = await request.get('/users')
-        .set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6IlNpZ25lZCBJbiBzdWNjZXNzZnVsbHkgOikiLCJpYXQiOjE2NDYxNDM1NDN9.07sVO2Z_DV7ty4z-mp2wV6Jv-D1KusX6q1aeS_S8iTw');
+        .set('Authorization',`bearer ${jwtToken}`);
         expect(response.status).toBe(200);
         expect(response).not.toThrowError;
         expect(response.body).not.toBe({});
@@ -27,9 +31,7 @@ describe('tests the users endpoints', () => {
     /*---------------------------------------------------------------------------------------------------------------------------------*/
     it('tests if GET /users/:id return a specific user', async () => {
         const response = await request.get('/users/2')
-        .send({
-            id: 2
-        });
+        .set('Authorization',`bearer ${jwtToken}`);
         expect(response.status).toBe(200);
         expect(response).not.toThrowError;
         expect(response.body).not.toBe({});
@@ -47,7 +49,7 @@ describe('tests the users endpoints', () => {
         .send({
             first_name: 'Demi',
             last_name: 'Sinister',
-            password: 'idk78654123wrong'
+            password: 'idk78654123-WRONG'
         });
         expect(response.body).toEqual('Incorrect Password! :(');
     });
@@ -72,7 +74,7 @@ describe('tests the users endpoints', () => {
     describe('tests the custom error messages for the DELETE /users/:id', () => {
         it('tests if DELETE /users/:id will return the intended errors when input is incorrect or not', async () => {
             const wrongDestroyPassword = await request.delete('/users/2')
-            .set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6IlNpZ25lZCBJbiBzdWNjZXNzZnVsbHkgOikiLCJpYXQiOjE2NDYxNDM1NDN9.07sVO2Z_DV7ty4z-mp2wV6Jv-D1KusX6q1aeS_S8iTw')
+            .set('Authorization',`bearer ${jwtToken}`)
             .send({
                 first_name: 'Demi',
                 last_name: 'Sinister',
@@ -81,7 +83,7 @@ describe('tests the users endpoints', () => {
             expect(wrongDestroyPassword.body).toEqual('incorrect password, please check your password again.');
             /*---------------------------------------------------------------------------------------------------------------------------------*/
             const wrongDestroyFirstName = await request.delete('/users/2')
-            .set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6IlNpZ25lZCBJbiBzdWNjZXNzZnVsbHkgOikiLCJpYXQiOjE2NDYxNDM1NDN9.07sVO2Z_DV7ty4z-mp2wV6Jv-D1KusX6q1aeS_S8iTw')
+            .set('Authorization',`bearer ${jwtToken}`)
             .send({
                 first_name: 'Demi-WRONG',
                 last_name: 'Sinister',
@@ -90,7 +92,7 @@ describe('tests the users endpoints', () => {
             expect(wrongDestroyFirstName.body).toEqual('user not found! please check your first and last name again. or sign up first if not');
             /*---------------------------------------------------------------------------------------------------------------------------------*/
             const wrongDestroyLastName = await request.delete('/users/2')
-            .set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6IlNpZ25lZCBJbiBzdWNjZXNzZnVsbHkgOikiLCJpYXQiOjE2NDYxNDM1NDN9.07sVO2Z_DV7ty4z-mp2wV6Jv-D1KusX6q1aeS_S8iTw')
+            .set('Authorization',`bearer ${jwtToken}`)
             .send({
                 first_name: 'Demi',
                 last_name: 'Sinister-WRONG',
@@ -102,7 +104,7 @@ describe('tests the users endpoints', () => {
     /*---------------------------------------------------------------------------------------------------------------------------------*/
     it('tests if DELETE /users/:id will delete a user but only if all inputs are correct', async () => {
         const response = await request.delete('/users/2')
-        .set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoVXNlciI6IlNpZ25lZCBJbiBzdWNjZXNzZnVsbHkgOikiLCJpYXQiOjE2NDYxNDM1NDN9.07sVO2Z_DV7ty4z-mp2wV6Jv-D1KusX6q1aeS_S8iTw')
+        .set('Authorization',`bearer ${jwtToken}`)
         .send({
             first_name: 'Demi',
             last_name: 'Sinister',

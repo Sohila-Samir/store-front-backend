@@ -89,10 +89,10 @@ const getUserOrdersHandler = async (req: Request, res: Response): Promise<void> 
 /*--------------------------------------------------------------------------*/
 //adding endpoints for each route handler
 export const orderHeaderRoutes = (app: express.Application) => {
-    app.get('/orders', getAllOrdersHandler);
-    app.get('/orders/:id', getOrderHandler);
-    app.get('/orders/:id/total-payment', getOrderTotalPriceHandler);
-    app.get('/orders/:status/users/:uid', getUserOrdersHandler);
+    app.get('/orders', authunticateToken, getAllOrdersHandler);
+    app.get('/orders/:id',authunticateToken, getOrderHandler);
+    app.get('/orders/:id/total-payment',authunticateToken, getOrderTotalPriceHandler);
+    app.get('/orders/:status/users/:uid',authunticateToken, getUserOrdersHandler);
     app.post('/orders', newOrderHandler);
     app.delete('/orders/:id',authunticateToken, deleteOrderHandler);
     app.put('/orders/:id', authunticateToken, updateOrderHandler);

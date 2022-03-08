@@ -100,7 +100,7 @@ const updateUserInfoHandler = async (req: Request, res: Response): Promise<void>
 //creating restful routes for the user routes handlers
 export const userRoutes = (app: express.Application) => {
     app.get('/users', authunticateToken ,getAllUsersHandler);
-    app.get('/users/:uid', getUserHandler);//uid >> user id
+    app.get('/users/:uid',authunticateToken, getUserHandler);//uid >> user id
     app.post('/users', createNewUserHandler);
     app.post('/users/auth', authunticateUserHandler);
     app.put('/users/:uid', authunticateToken, updateUserInfoHandler);//uid >> user id

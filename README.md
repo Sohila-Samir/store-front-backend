@@ -51,6 +51,7 @@
      #### Databases:
       1. store_front for **Devlopment**
       2. store_front_test for **Testsing**
+      > Both databases are runing on the default port number (5432).
      #### Tables:
       1. users - for storing users.
       2. products - for storing products.
