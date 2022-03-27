@@ -2,7 +2,7 @@ import { User } from '../models/user';
 
 describe('tests the user module', () => {
     const user = new User();
-    it('tests if newUser method creats a new user in the users table', async () => {
+    it('tests if newUser method creates a new user in the users table', async () => {
         const result = await user.newUser({
             first_name: 'Nathan',
             last_name: 'Rozentals',
@@ -31,10 +31,10 @@ describe('tests the user module', () => {
         });
     });
     /*---------------------------------------------------------------------------------------------------------------------------------*/
-    it('tests if the authnticate method authnticate user via password', async () => {
-        const correctReq = await user.authunticate('Nathan','Rozentals','password123');
+    it('tests if the authenticate method authenticate user via password', async () => {
+        const correctReq = await user.authenticate('Nathan','Rozentals','password123');
         expect(correctReq).toEqual('Signed In successfully :)');
-        const wrongReq = await user.authunticate('Nathan','Rozentals','password123-WRONG');
+        const wrongReq = await user.authenticate('Nathan','Rozentals','password123-WRONG');
         expect(wrongReq).toEqual('Incorrect Password! :(');
     });
     /*---------------------------------------------------------------------------------------------------------------------------------*/

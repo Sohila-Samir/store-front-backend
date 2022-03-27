@@ -3,11 +3,11 @@ import app from '../server.js';
 import  jwt  from 'jsonwebtoken';
 
 const request = supertest(app);
-const secretSignture = process.env.SECRET_SIGNTURE as string;
+const secretSignature = process.env.SECRET_SIGNATURE as string;
 /*------------------------------------------------------------------------------------------------------------*/
 describe('tests all products endpoints', () => {
-    //creating a new jwt for each time an endpoint testing run that requires jwt authntication.
-    const jwtToken = jwt.sign('just for testing on endpoints', secretSignture);
+    //creating a new jwt for each time an endpoint testing run that requires jwt authentication.
+    const jwtToken = jwt.sign('just for testing on endpoints', secretSignature);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     it('tests the POST /products endpoint to create a new product', async () => {
         const response = await request.post('/products')
@@ -77,16 +77,16 @@ describe('tests all products endpoints', () => {
         expect(response.body).not.toThrowError;
     });
     /*--------------------------------------------------------------------------------------------------------------------*/
-                                        //END OF TESTS FOR CRUD MTHODS FOR PRODUCTS TABLE//
+                                        //END OF TESTS FOR CRUD METHODS FOR PRODUCTS TABLE//
     /*--------------------------------------------------------------------------------------------------------------------*/
     describe('tests the orderProduct endpoints', () => {
         it('tests the POST /orders/:id/products endpoint to add a product to an order', async () => {
-            const addProuctToOrders = await request.post('/orders/3/products')
+            const addProductToOrders = await request.post('/orders/3/products')
             .send({
                 product_id: 3,
                 qty: 1,
             });
-            expect(addProuctToOrders.body).toEqual({
+            expect(addProductToOrders.body).toEqual({
                 id: 4,
                 order_id: '3',
                 product_id: '3',
@@ -128,7 +128,7 @@ describe('tests all products endpoints', () => {
             expect(getAllOrdersProducts).not.toThrowError;
         });
         /*----------------------------------------------------------------------------------------------------------------------*/
-        it('tests the DELETE /orders/:id/products/:opid endpoint to delete a specfic product from a specific order', async () => {
+        it('tests the DELETE /orders/:id/products/:opid endpoint to delete a specific product from a specific order', async () => {
             const deleteOrderProduct = await request.delete('/orders/3/products/4')
             .set('Authorization',`bearer ${jwtToken}`);
             expect(deleteOrderProduct.body).toEqual({
@@ -144,7 +144,7 @@ describe('tests all products endpoints', () => {
     /*----------------------------------------------------------------------------------------------------------------------*/
                                         //END OF TESTING FOR ORDERPRODUCT CLASS//
     /*----------------------------------------------------------------------------------------------------------------------*/
-    //NOTE: I ADDED THIS METHOD FROM THE PRODUCTCLASS AT THE END IN ORDER TO NOT CREATE ANOTER PRODUCT AGAIN FOR TESTING ON ORDER PRODUCTS ENDPOINTS
+    //NOTE: I ADDED THIS METHOD FROM THE PRODUCTCLASS AT THE END IN ORDER TO NOT CREATE ANOTHER PRODUCT AGAIN FOR TESTING ON ORDER PRODUCTS ENDPOINTS
     it('tests the DELETE /products/:id delete a product and return the deleted record', async () => {
         const response = await request.delete('/products/3')
         .set('Authorization',`bearer ${jwtToken}`);

@@ -17,7 +17,7 @@ export class OrderClass {
     //adding new order
     async newOrder (order: orderType): Promise<orderType | string> {
         try {
-            //check first if the status intered in only either active or complete and if not return an error message
+            //check first if the status entered in only either active or complete and if not return an error message
             if(order.status === 'active' || order.status === 'complete') {
                 const connect = await client.connect();
                 const newOrderQry = 'INSERT INTO order_header (user_id, status) VALUES ($1, $2) RETURNING *';
@@ -27,7 +27,7 @@ export class OrderClass {
             }
             return 'invalid status input';
         }catch(err: unknown) {
-            throw new Error(`an error occured during adding your order to the orders list: ${err}`);
+            throw new Error(`an error occurred during adding your order to the orders list: ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@ export class OrderClass {
             connect.release();
             return deleteOrder.rowCount?deleteOrder.rows[0]:`there is no order id for ${orderId}`;
         }catch(err: unknown) {
-            throw new Error(`an error occured during deleting your order from the orders list: ${err}`);
+            throw new Error(`an error occurred during deleting your order from the orders list: ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ export class OrderClass {
             connect.release();
             return updateOrder.rows[0];
         }catch(err: unknown) {
-            throw new Error(`an error occured during updating your order: ${err}`);
+            throw new Error(`an error occurred during updating your order: ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ export class OrderClass {
             connect.release();
             return getOrder.rowCount?getOrder.rows[0]:`there is no order id for ${orderId}`;
         }catch(err: unknown) {
-            throw new Error(`an error occured during getting your order: ${err}`);
+            throw new Error(`an error occurred during getting your order: ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ export class OrderClass {
             connect.release();
             return getAllOrders.rowCount?getAllOrders.rows:'There is no orders';
         }catch(err: unknown) {
-            throw new Error(`an error occured during getting all orders: ${err}`);
+            throw new Error(`an error occurred during getting all orders: ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -97,7 +97,7 @@ export class OrderClass {
             connect.release();
             return getOrderTotalPrice.rowCount?getOrderTotalPrice.rows[0]:'There is no products to sum';
         }catch(err: unknown) {
-            throw new Error(`an error occured during getting your order total payment : ${err}`);
+            throw new Error(`an error occurred during getting your order total payment : ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -114,7 +114,7 @@ export class OrderClass {
             }
             return 'Invalid status input!';
         }catch(err: unknown) {
-            throw new Error(`an error occured during getting all of your current order ${err}`);
+            throw new Error(`an error occurred during getting all of your current order ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/

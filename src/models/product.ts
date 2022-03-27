@@ -32,7 +32,7 @@ export class ProductClass{
             connect.release() as void;
             return getAllProducts.rows;
         }catch (err: unknown) {
-            throw new Error(`an error occured during reteriving the data from the server ${err}`);
+            throw new Error(`an error occurred during retrieving the data from the server ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -45,7 +45,7 @@ export class ProductClass{
             connect.release() as void;
             return result.rows[0];
         }catch (err: unknown) {
-            throw new Error(`an error occured during inserting the data in the server ${err}`);
+            throw new Error(`an error occurred during inserting the data in the server ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ export class ProductClass{
             connect.release();
             return result.rows[0];
         }catch (err: unknown) {
-            throw new Error(`an error occured during getting the data from the server ${err}`);
+            throw new Error(`an error occurred during getting the data from the server ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -71,11 +71,11 @@ export class ProductClass{
             connect.release();
             return result.rows[0];
         }catch (err: unknown) {
-            throw new Error(`an error occured during updating the data in the server ${err}`);
+            throw new Error(`an error occurred during updating the data in the server ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
-    //get all products that applay to the same specified product category
+    //get all products that apply to the same specified product category
     async getProductsByCategory (category: string): Promise<productType[] | string> {
         try{
             const connect = await client.connect();
@@ -84,7 +84,7 @@ export class ProductClass{
             connect.release();
             return getProductsByCategory.rowCount as number?getProductsByCategory.rows:`There is no products in ${category}`;
         }catch (err: unknown) {
-            throw new Error(`an error occured during getting the data from the server ${err}`);
+            throw new Error(`an error occurred during getting the data from the server ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -97,35 +97,35 @@ export class ProductClass{
             connect.release();
             return result.rows[0];
         }catch (err: unknown) {
-            throw new Error(`an error occured during reteriving the data from the server ${err}`);
+            throw new Error(`an error occurred during retrieving the data from the server ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
-                                                    //END OF CRUD MTHODS FOR PRODUCTS TABLE//
+                                                    //END OF CRUD METHODS FOR PRODUCTS TABLE//
     /*------------------------------------------------------------------------------------------------------------------------------------*/
 }
 
 export class OrderProductClass {
     //add a new order product to a certain existing order
-    async addProuctToOrders (orderProduct: orderProductType): Promise<orderProductType> {
+    async addProductToOrders (orderProduct: orderProductType): Promise<orderProductType> {
         try {
             const connect = await client.connect();
-            //price should not be added manuelly hence, i will get the price from the products table then assign it when cretaing the order product.
+            //price should not be added manually hence, i will get the price from the products table then assign it when creating the order product.
             const getProductPriceQry = 'SELECT price FROM products WHERE id = $1';
             const getProductPrice = await connect.query(getProductPriceQry, [orderProduct.product_id]);
             const productPrice = parseInt(getProductPrice.rows[0].price);
             //add the order product to a certain order in the order_details table.
             //NOTICE: I ADDED THE EXTRACTED PRICE FROM THE ABOVE QUERY AS AN ARGUMENT HERE WHEN ADDING THE ORDER PRODUCT.
             const addOrderProductQry = 'INSERT INTO order_details (order_id, product_id, qty, product_price, sub_total) VALUES ($1,$2,$3,$4,$5) RETURNING *';
-            //here i will add a variable that caluclates the sub_total first based on the specified qty and the extracted product price from the first query.
+            //here i will add a variable that calculates the sub_total first based on the specified qty and the extracted product price from the first query.
             const getSubTotalPrice: number = orderProduct.qty as number * productPrice ;
-            //finallt i will added all extracted data from the last querirs alongside the specified inputs from the user.
+            //finally i will added all extracted data from the last queries alongside the specified inputs from the user.
             const addOrderProduct = await connect.query(addOrderProductQry,
                 [orderProduct.order_id, orderProduct.product_id, orderProduct.qty, productPrice, getSubTotalPrice]) as QueryResult<orderProductType>;
             connect.release();
             return addOrderProduct.rows[0];
         }catch (err: unknown) {
-            throw new Error(`an error occured during adding your product to the orders list ${err}`);
+            throw new Error(`an error occurred during adding your product to the orders list ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -138,7 +138,7 @@ export class OrderProductClass {
             connect.release();
             return getAllOrdersProducts.rows;
         }catch (err: unknown) {
-            throw new Error(`an error occured during getting all orders products from the orders list ${err}`);
+            throw new Error(`an error occurred during getting all orders products from the orders list ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -151,7 +151,7 @@ export class OrderProductClass {
             connect.release();
             return showAllOrderProducts.rowCount?showAllOrderProducts.rows:`seems like there is no products in order ${orderId} in the orders list`;
         }catch (err: unknown) {
-            throw new Error(`an error occured during reteriving all of your order products ${err}`);
+            throw new Error(`an error occurred during retrieving all of your order products ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -177,7 +177,7 @@ export class OrderProductClass {
             connect.release();
             return updateOrderProduct.rows[0];
         }catch (err: unknown) {
-            throw new Error(`an error occured during updating your order product from the orders list ${err}`);
+            throw new Error(`an error occurred during updating your order product from the orders list ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -190,7 +190,7 @@ export class OrderProductClass {
             connect.release();
             return deleteOrderProduct.rowCount?deleteOrderProduct.rows[0]:`seems like there is no product ${orderProductId} in order ${orderId}`;
         }catch (err: unknown) {
-            throw new Error(`an error occured during deleting your order product ${err}`);
+            throw new Error(`an error occurred during deleting your order product ${err}`);
         }
     }
 }

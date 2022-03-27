@@ -3,12 +3,12 @@ import { User } from '../models/user';
 import { userType } from '../models/user';
 import  jwt  from 'jsonwebtoken';
 import express from 'express';
-import { authunticateToken } from '../modules/authnticate-token';
+import { authenticateToken as authenticateToken } from '../modules/authenticate';
 /*-------------------------------------END OF SETUP FOR WORKING ON USERS CLASS METHODS HANDLERS---------------------------------*/
 //initializing a new instance of the users class
 const user = new User;
-//get the sercret signture from the env variables
-const secretSignture = process.env.SECRET_SIGNTURE as string;
+//get the secret signature from the env variables
+const secretSignature = process.env.SECRET_SIGNATURE as string;
 /*------------------------------------------------------------------------------------------------*/
 //get all users
 const getAllUsersHandler = async (req: Request, res: Response): Promise<void>  => {
@@ -41,7 +41,7 @@ const createNewUserHandler = async (req: Request, res: Response): Promise<void> 
             password: req.body.password as string
         };
         const result = await user.newUser(newUser as userType) as userType ;
-        const token = jwt.sign({user: result}, secretSignture);
+        const token = jwt.sign({user: result}, secretSignature);
         res.json(token);
     }catch(err: unknown) {
         res.status(401);
@@ -49,20 +49,20 @@ const createNewUserHandler = async (req: Request, res: Response): Promise<void> 
     }
 };
 /*----------------------------------------------------------------------------------------*/
-//authnticate user based on existing first_name, last_name and correct password
-const authunticateUserHandler = async (req: Request, res: Response): Promise<void> => {
+//authenticate user based on existing first_name, last_name and correct password
+const authenticateUserHandler = async (req: Request, res: Response): Promise<void> => {
     try {
         const userData = {
             first_name: req.body.first_name as string,
             last_name: req.body.last_name as string,
             password: req.body.password as string
         };
-        const result = await user.authunticate(userData.first_name, userData.last_name, userData.password) as string;
+        const result = await user.authenticate(userData.first_name, userData.last_name, userData.password) as string;
         if (result === 'Incorrect Password! :(') {
             res.json(result);
 
         } else {
-            const token = jwt.sign({authUser: result}, secretSignture) as string;
+            const token = jwt.sign({authUser: result}, secretSignature) as string;
             res.json({
                 message: result,
                 token,
@@ -92,17 +92,17 @@ const updateUserInfoHandler = async (req: Request, res: Response): Promise<void>
         res.json(result);
     }catch(err: unknown) {
         res.status(401);
-        res.json(`error occured during requesting to update user info ${err}`);
+        res.json(`an error occurred during requesting to update user info ${err}`);
     }
 };
 /*---------------------------------------------------------------------------------------------------------------------------------*/
 
 //creating restful routes for the user routes handlers
 export const userRoutes = (app: express.Application) => {
-    app.get('/users', authunticateToken ,getAllUsersHandler);
-    app.get('/users/:uid',authunticateToken, getUserHandler);//uid >> user id
+    app.get('/users', authenticateToken ,getAllUsersHandler);
+    app.get('/users/:uid',authenticateToken, getUserHandler);//uid >> user id
     app.post('/users', createNewUserHandler);
-    app.post('/users/auth', authunticateUserHandler);
-    app.put('/users/:uid', authunticateToken, updateUserInfoHandler);//uid >> user id
-    app.delete('/users/:uid',authunticateToken, destroyUserHandler);//uid >> user id
+    app.post('/users/auth', authenticateUserHandler);
+    app.put('/users/:uid', authenticateToken, updateUserInfoHandler);//uid >> user id
+    app.delete('/users/:uid',authenticateToken, destroyUserHandler);//uid >> user id
 };

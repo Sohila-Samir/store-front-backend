@@ -14,7 +14,7 @@ export type deletedUserType = {
     record?: userType
 }
 /*------------------------------------------------------------------------------------------------------------------------------------*/
-//extratcing the pepper secret phrase and salt rounds number from the env variables
+//extracting the pepper secret phrase and salt rounds number from the env variables
 const pepper = process.env.BCRYPT_PASSWORD as string;
 const saltRounds= parseInt(process.env.SALT_ROUNDS as string) as number;
 
@@ -29,7 +29,7 @@ export class User {
             connect.release();
             return users;
         }catch(err: unknown) {
-        throw new Error(`an error occured during getting all users : ${err}`);
+        throw new Error(`an error occurred during getting all users : ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@ export class User {
             connect.release();
             return user;
         }catch(err: unknown) {
-            throw new Error(`an error occured during getting the user : ${err}`);
+            throw new Error(`an error occurred during getting the user : ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -59,12 +59,12 @@ export class User {
             connect.release();
             return result.rows[0];
         }catch(err: unknown) {
-            throw new Error(`an error occured during creating an account for: ${err}`);
+            throw new Error(`an error occurred during creating an account for: ${err}`);
         }
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
-    //authnticate a user based on correct password
-    async authunticate (firstName: string, LastName: string, password: string): Promise<string> {
+    //authenticate a user based on correct password
+    async authenticate (firstName: string, LastName: string, password: string): Promise<string> {
         const connect = await client.connect();
         const qry = 'SELECT password FROM users WHERE first_name = $1 AND Last_name = $2';
         const userDataResult = await connect.query(qry, [firstName, LastName]);
@@ -78,7 +78,7 @@ export class User {
     }
 
     /*------------------------------------------------------------------------------------------------------------------------------------*/
-    //updating any user info however if the column requested to be updated is passsword. current password should be validated first.
+    //updating any user info however if the column requested to be updated is password. current password should be validated first.
     async updateUserInfo (column: string, newValue: string, userId: string, currentPassword?: string): Promise<userType | string> {
         const connect = await client.connect();
         const updateUserInfoQry = `UPDATE users SET ${column} = $1 WHERE id = $2 RETURNING *`;
@@ -99,38 +99,37 @@ export class User {
             const updateUserPassword = await connect.query(updateUserInfoQry, [hashGivenPassword, userId]) as QueryResult;
             return updateUserPassword.rows[0] as userType;
         }
-        //incase the requested column to be updated is not password update it and return backk
+        //incase the requested column to be updated is not password update it and return back
         const updateUserInfo = await connect.query(updateUserInfoQry, [newValue, userId]) as QueryResult;
         return updateUserInfo.rowCount as number?updateUserInfo.rows[0] as userType:`looks like input ${column} was not updated :(`;
     }
     /*------------------------------------------------------------------------------------------------------------------------------------*/
 
-    //delete a certain user based on existing given first and last name in db and correct password provided.
+    // delete a certain user based on existing given first and last name in db and correct password provided.
     async destroyUser (givenFirstName: string, givenLastName: string, password: string, userId: string): Promise<deletedUserType | string> {
-        //getting the first and last name first based on the given last and first name in order to check if they exist or not.
+        // getting the first and last name first based on the given last and first name in order to check if they exist or not.
         const connect = await client.connect();
         const getFirstAndLastNameQry = 'SELECT first_name, last_name FROM users WHERE first_name = $1 AND Last_name = $2 AND id = $3';
         const getFirstAndLastName = await connect.query(getFirstAndLastNameQry, [givenFirstName, givenLastName, userId]) as QueryResult;
-        //if last and first names exist in the database, hash the given password and compare it the password saved in db related to the user.
+        // if last and first names exist in the database
+        // hash the given password and compare it the password saved in db related to the user.
         if(getFirstAndLastName.rowCount) {
-            //get the password saved in database related to the given first and last names.
             const getUserPasswordQry = 'SELECT password FROM users WHERE first_name = $1 AND Last_name = $2 AND id = $3';
             const getUserPassword = await connect.query(getUserPasswordQry, [givenFirstName, givenLastName, userId]) as QueryResult;
             const dbUserPassword = getUserPassword.rows[0].password as string;
-            //hash the given password from the client side.
+
             const hashGivenPassword = password + pepper as string;
-            //compare the given password with the saved database password.
-            //if password is correct go and delete the user from the database and return the deleted user along with a successful message.
+
             if (bcrypt.compareSync(hashGivenPassword, dbUserPassword)) {
             const destroyUserRecordQry = 'DELETE FROM users WHERE first_name = $1 AND last_name = $2 AND id = $3 RETURNING *';
             const destroyUserRecord = await connect.query(destroyUserRecordQry, [givenFirstName, givenLastName, userId]) as QueryResult;
-            const destroiedRecord = destroyUserRecord.rows[0] as userType;
+            const destroyedRecord = destroyUserRecord.rows[0] as userType;
             return {
                 message: 'user found',
-                record: destroiedRecord,
+                record: destroyedRecord,
             } as deletedUserType;
         }
-        //if password did not match. return an incorrect passord message to the user.
+        //if password did not match. return an incorrect password message to the user.
         return 'incorrect password, please check your password again.';
         }
         connect.release();

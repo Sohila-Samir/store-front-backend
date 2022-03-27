@@ -4,11 +4,11 @@ import app from '../server';
 import  jwt  from 'jsonwebtoken';
 
 const request = supertest(app);
-const secretSignture = process.env.SECRET_SIGNTURE as string;
+const secretSignature = process.env.SECRET_SIGNATURE as string;
 /*------------------------------------------------------------------------------------------------------------------------*/
 describe('tests the orders endpoints', () => {
-    //creating a new jwt for each time an endpoint testing run that requires jwt authntication.
-    const jwtToken = jwt.sign('just for testing on endpoints', secretSignture);
+    //creating a new jwt for each time an endpoint testing run that requires jwt authentication.
+    const jwtToken = jwt.sign('just for testing on endpoints', secretSignature);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     it('tests the POST /orders endpoint to create a new order', async () => {
         const newOrderBody = {
@@ -24,7 +24,7 @@ describe('tests the orders endpoints', () => {
         } as orderType);
     });
     /*----------------------------------------------------------------------------------------------*/
-    it('tests the GET /orders/:id enpoint to get a certain order', async () => {
+    it('tests the GET /orders/:id endpoint to get a certain order', async () => {
         const response = await request.get('/orders/2')
         .set('Authorization',`bearer ${jwtToken}`);
         expect(response.body).toEqual({

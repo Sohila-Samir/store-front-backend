@@ -1,5 +1,5 @@
-import expres, { Request, Response } from 'express';
-import { authunticateToken } from '../modules/authnticate-token';
+import express, { Request, Response } from 'express';
+import { authenticateToken } from '../modules/authenticate';
 import { productType, ProductClass, OrderProductClass } from '../models/product';
 
 const store = new ProductClass;
@@ -52,7 +52,7 @@ const updateProductHandler = async (req: Request, res: Response): Promise<void> 
         res.json(result);
     }catch(err: unknown) {
         res.status(401);
-        res.send(`an error occured ${err}`);
+        res.send(`an error occurred ${err}`);
     }
 };
 /*----------------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ const getProductsByCategoryHandler = async (req: Request, res: Response): Promis
         res.json(getProductsByCategory);
     }catch(err: unknown) {
         res.status(401);
-        res.send(`an error occured during getting all products by the specified category${err}`);
+        res.send(`an error occurred during getting all products by the specified category${err}`);
     }
 };
 /*----------------------------------------------------------------------------------------*/
@@ -78,7 +78,7 @@ const deleteProductHandler = async (req: Request, res: Response): Promise<void> 
     }
 };
             /*---------------------------------------------------------------------------------------------------*/
-                                            //END OF CRUD MTHODS HANDLERS FOR PRODUCTS TABLE//
+                                            //END OF CRUD METHODS HANDLERS FOR PRODUCTS TABLE//
             /*---------------------------------------------------------------------------------------------------*/
 
 //add new product to a certain order
@@ -89,8 +89,8 @@ const addOrderProductHandler = async (req: Request, res: Response): Promise<void
             product_id: req.body.product_id,
             qty: req.body.qty,
         };
-        const callAddProuctToOrdersMethod = await op.addProuctToOrders(orderProductBody);
-        res.json(callAddProuctToOrdersMethod);
+        const callAddProductToOrdersMethod = await op.addProductToOrders(orderProductBody);
+        res.json(callAddProductToOrdersMethod);
     }catch (err: unknown) {
         res.status(401);
         res.json(`${err}`);
@@ -111,8 +111,8 @@ const getAllOrdersProductsHandler = async (req: Request, res: Response): Promise
 //show all products that have been included to a certain order
 const showAllOrderProductsHandler = async (req: Request, res: Response): Promise<void> => {
     try {
-        const callshowAllOrderProducts = await op.showAllOrderProducts(req.params.id);
-        res.json(callshowAllOrderProducts);
+        const callShowAllOrderProducts = await op.showAllOrderProducts(req.params.id);
+        res.json(callShowAllOrderProducts);
     }catch(err: unknown) {
         res.status(401);
         res.json(`${err}`);
@@ -123,8 +123,8 @@ const showAllOrderProductsHandler = async (req: Request, res: Response): Promise
 const updateOrderProductHandler = async (req: Request, res: Response): Promise<void> => {
     try {
         //opid >>> orderProductId
-        const callupdateOrderProduct = await op.updateOrderProduct(req.body.column,req.body.new_value, parseInt(req.params.opid), parseInt(req.params.id));
-        res.json(callupdateOrderProduct);
+        const callUpdateOrderProduct = await op.updateOrderProduct(req.body.column,req.body.new_value, parseInt(req.params.opid), parseInt(req.params.id));
+        res.json(callUpdateOrderProduct);
     }catch(err: unknown) {
         res.status(401);
         res.json(`${err}`);
@@ -134,28 +134,28 @@ const updateOrderProductHandler = async (req: Request, res: Response): Promise<v
 //deleting a certain order product in a certain order
 const deleteOrderProductHandler = async (req: Request, res: Response): Promise<void> => {
     try {
-        const calldeleteOrderProduct = await op.deleteOrderProduct(parseInt(req.params.id), parseInt(req.params.opid));
-        res.json(calldeleteOrderProduct);
+        const callDeleteOrderProduct = await op.deleteOrderProduct(parseInt(req.params.id), parseInt(req.params.opid));
+        res.json(callDeleteOrderProduct);
     }catch(err: unknown) {
         res.status(401);
         res.json(`${err}`);
     }
 };
             /*---------------------------------------------------------------------------------------------------*/
-                                            //END OF CRUD MTHODS HANDLERS FOR ORDER_DETAILS TABLE//
+                                            //END OF CRUD METHODS HANDLERS FOR ORDER_DETAILS TABLE//
             /*---------------------------------------------------------------------------------------------------*/
 //creating restful routes for the methods of products & order_details tables
-export const productRoutes = (app: expres.Application) => {
+export const productRoutes = (app: express.Application) => {
     app.get('/products/:id', getProductHandler);
     app.get('/products', getAllProductHandler);
-    app.get('/products/categories/:category', authunticateToken, getProductsByCategoryHandler);
-    app.post('/products', authunticateToken, addProductHandler);
-    app.put('/products/:id', authunticateToken, updateProductHandler);
-    app.delete('/products/:id',authunticateToken, deleteProductHandler);
+    app.get('/products/categories/:category', authenticateToken, getProductsByCategoryHandler);
+    app.post('/products', authenticateToken, addProductHandler);
+    app.put('/products/:id', authenticateToken, updateProductHandler);
+    app.delete('/products/:id',authenticateToken, deleteProductHandler);
     /*-----------------------------------------------------------------------------------------------------------------*/
     app.get('/orders/products', getAllOrdersProductsHandler);
     app.get('/orders/:id/products', showAllOrderProductsHandler);
     app.post('/orders/:id/products', addOrderProductHandler);
-    app.put('/orders/:id/products/:opid', authunticateToken,updateOrderProductHandler);//opid >>> order Product Id
-    app.delete('/orders/:id/products/:opid', authunticateToken, deleteOrderProductHandler);//opid >>> order Product Id
+    app.put('/orders/:id/products/:opid', authenticateToken,updateOrderProductHandler);//opid >>> order Product Id
+    app.delete('/orders/:id/products/:opid', authenticateToken, deleteOrderProductHandler);//opid >>> order Product Id
 };

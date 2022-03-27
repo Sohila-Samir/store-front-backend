@@ -4,13 +4,13 @@ import { OrderClass } from '../models/order';
 
 describe('test the Products model', () => {
     const store= new ProductClass;
-    describe('tests the CRUD mthods for Products', () => {
+    describe('tests the CRUD methods for Products', () => {
         it('expects creating method to to be defined and create a new row', async () => {
             expect(store.creating).toBeDefined();
             const result = await store.creating({
                 name: 'Iphone 12 pro Max',
                 price: '23000',
-                category: 'Electronics-Mobils',
+                category: 'Electronics-Mobile',
                 color: 'Blue',
                 description: null
             });
@@ -18,7 +18,7 @@ describe('test the Products model', () => {
                 id: 2,
                 name: 'Iphone 12 pro Max',
                 price: '23000',
-                category: 'Electronics-Mobils',
+                category: 'Electronics-Mobile',
                 color: 'Blue',
                 description: null
             });
@@ -37,7 +37,7 @@ describe('test the Products model', () => {
                 id: 2,
                 name: 'Iphone 12 pro Max',
                 price: '23000',
-                category: 'Electronics-Mobils',
+                category: 'Electronics-Mobile',
                 color: 'Blue',
                 description: null
             });
@@ -50,7 +50,7 @@ describe('test the Products model', () => {
                 id: 2,
                 name: 'Iphone 12 pro Max',
                 price: '23000',
-                category: 'Electronics-Mobils',
+                category: 'Electronics-Mobile',
                 color: 'silver',
                 description: null
             });
@@ -58,13 +58,13 @@ describe('test the Products model', () => {
         /*-----------------------------------------------------------------------------------*/
         it('test the getProductsByCategory method to get products by category', async () => {
             expect(store.getProductsByCategory).toBeDefined;
-            const result = await store.getProductsByCategory('Electronics-Mobils');
-            expect(result).not.toEqual('There is no products in Electronics-Mobils');
+            const result = await store.getProductsByCategory('Electronics-Mobile');
+            expect(result).not.toEqual('There is no products in Electronics-Mobile');
             expect(result).not.toThrowError;
         });
     });
     /*--------------------------------------------------------------------------------------------------------------------*/
-                                        //END OF TESTS FOR CRUD MTHODS FOR PRODUCTS TABLE//
+                                        //END OF TESTS FOR CRUD METHODS FOR PRODUCTS TABLE//
     /*--------------------------------------------------------------------------------------------------------------------*/
     describe('tests the CRUD methods for orders products', () => {
         const order = new OrderClass;//this needed for testing on order_details table
@@ -76,15 +76,15 @@ describe('test the Products model', () => {
             });
         });
         /*--------------------------------------------------------------------------------------------------------------------*/
-        it('tests the addProuctToOrders method to add a new order product to the order_details table', async () => {
+        it('tests the addProductToOrders method to add a new order product to the order_details table', async () => {
             const orderProductBody = {
                 order_id: 3,
                 product_id: 2,
                 qty: 1,
                 product_price: 23000
             } as orderProductType;
-            const calladdProuctToOrders = await op.addProuctToOrders(orderProductBody);
-            expect(calladdProuctToOrders).toEqual({
+            const callAddProductToOrders = await op.addProductToOrders(orderProductBody);
+            expect(callAddProductToOrders).toEqual({
                 id: 3,
                 order_id: '3',
                 product_id: '2',
@@ -138,15 +138,15 @@ describe('test the Products model', () => {
         /*----------------------------------------------------------------------------------------------------------------------*/
                                             //END OF TESTING FOR ORDERPRODUCT CLASS//
         /*----------------------------------------------------------------------------------------------------------------------*/
-        //NOTE: I ADDED THIS METHOD FROM THE PRODUCTCLASS AT THE END IN ORDER TO NOT CREATE ANOTER PRODUCT AGAIN FOR TESTING ON ORDER_DETAILS TABLE
-        it('expects deleting method to be defined and to delete a the given element specifie by its id', async () => {
+        //NOTE: I ADDED THIS METHOD FROM THE PRODUCTCLASS AT THE END IN ORDER TO NOT CREATE ANOTHER PRODUCT AGAIN FOR TESTING ON ORDER_DETAILS TABLE
+        it('expects deleting method to be defined and to delete a the given element specified by its id', async () => {
             expect(store.deleting).toBeDefined();
             const result = await store.deleting(2);
             expect(result).toEqual({
                 id: 2,
                 name: 'Iphone 12 pro Max',
                 price: '23000',
-                category: 'Electronics-Mobils',
+                category: 'Electronics-Mobile',
                 color: 'silver',
                 description: null
             });

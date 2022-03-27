@@ -1,9 +1,9 @@
 //adding the required model files and middleware...etc for this file
 import express, { Request, Response } from 'express';
 import { OrderClass, orderType } from '../models/order';
-import { authunticateToken } from '../modules/authnticate-token';
+import { authenticateToken } from '../modules/authenticate';
 
-//intializing an order instance of the order class
+//initializing an order instance of the order class
 const order = new OrderClass;
 /*-------------------------------------END OF SETUP FOR WORKING ON ORDERS CLASS METHODS HANDLERS---------------------------------*/
 //adding route handlers for all orders endpoints
@@ -35,8 +35,8 @@ const deleteOrderHandler = async (req: Request, res: Response): Promise<void> =>
 //updating a certain column with a certain value in a certain order handler
 const updateOrderHandler = async (req: Request, res: Response): Promise<void> => {
     try{
-        const callupdateOrderMethod = await order.updateOrder(req.body.column, req.body.new_value, parseInt(req.params.id));
-        res.json(callupdateOrderMethod);
+        const callUpdateOrderMethod = await order.updateOrder(req.body.column, req.body.new_value, parseInt(req.params.id));
+        res.json(callUpdateOrderMethod);
     }catch(err: unknown) {
         res.status(401);
         res.json(`${err}`);
@@ -89,11 +89,11 @@ const getUserOrdersHandler = async (req: Request, res: Response): Promise<void> 
 /*--------------------------------------------------------------------------*/
 //adding endpoints for each route handler
 export const orderHeaderRoutes = (app: express.Application) => {
-    app.get('/orders', authunticateToken, getAllOrdersHandler);
-    app.get('/orders/:id',authunticateToken, getOrderHandler);
-    app.get('/orders/:id/total-payment',authunticateToken, getOrderTotalPriceHandler);
-    app.get('/orders/:status/users/:uid',authunticateToken, getUserOrdersHandler);
+    app.get('/orders', authenticateToken, getAllOrdersHandler);
+    app.get('/orders/:id',authenticateToken, getOrderHandler);
+    app.get('/orders/:id/total-payment',authenticateToken, getOrderTotalPriceHandler);
+    app.get('/orders/:status/users/:uid',authenticateToken, getUserOrdersHandler);
     app.post('/orders', newOrderHandler);
-    app.delete('/orders/:id',authunticateToken, deleteOrderHandler);
-    app.put('/orders/:id', authunticateToken, updateOrderHandler);
+    app.delete('/orders/:id',authenticateToken, deleteOrderHandler);
+    app.put('/orders/:id', authenticateToken, updateOrderHandler);
 };

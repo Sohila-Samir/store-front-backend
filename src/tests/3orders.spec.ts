@@ -12,7 +12,7 @@ describe('tests order module', () => {
         await store.creating({
             name: 'Iphone 12 pro Max',
             price: '23000',
-            category: 'Electronics-Mobils',
+            category: 'Electronics-Mobile',
             color: 'Blue',
             description: null
         });
@@ -22,7 +22,7 @@ describe('tests order module', () => {
             password: 'stars852456'
         });
     });
-    //intializing a new order instance from orderClass class
+    //initializing a new order instance from orderClass class
     const order = new OrderClass;
     /*--------------------------------------------------------------------------------------------------------------------*/
     describe('expects the methods return values to work as intended and to be defined', () => {
@@ -66,14 +66,14 @@ describe('tests order module', () => {
         });
         it('tests the getUserOrder method to return all Active or Completed orders by the user', async () => {
             const activeOrders = await order.getUserOrders(3,'active');
-            const completedOrders = await order.getUserOrders(3, 'aomplete');
+            const completedOrders = await order.getUserOrders(3, 'complete');
             expect(activeOrders).not.toEqual('There is no Active orders to user 3');
             expect(completedOrders).not.toEqual('There is no Complete orders to user 3');
         });
         /*--------------------------------------------------------------------------------------------------------------------*/
-        it('tests the getOrderTotalPrice method to get the total price of all prooducts in an order', async () => {
+        it('tests the getOrderTotalPrice method to get the total price of all products in an order', async () => {
             const op = new OrderProductClass;// op >>> order product
-            (await op.addProuctToOrders({
+            (await op.addProductToOrders({
                 order_id: 1,
                 product_id: 1,
                 qty: 1,
@@ -87,7 +87,7 @@ describe('tests order module', () => {
         });
     });
             /*---------------------------------------------------------------------------------------------------*/
-                                    //END OF TESTSING FOR CORRECT ORDERS MTHODS CALLING//
+                                    //END OF TESTING FOR CORRECT ORDERS METHODS CALLING//
             /*---------------------------------------------------------------------------------------------------*/
     describe('expects the custom error messages to be returned when things go wrong in methods', () => {
         it('tests if (getOrder) method will return the custom error when an order id does not exist', async () => {
@@ -96,13 +96,13 @@ describe('tests order module', () => {
             expect(wrongCallGetOrderMethod).toEqual('there is no order id for 5');
         });
         /*--------------------------------------------------------------------------------------------------------------------*/
-        it('tests if (deleteOrder) methor will return the custom error when an order id does not exist', async () => {
-            const wrongCallDeleteOrderMthod = await order.deleteOrder(5);
-            expect(wrongCallDeleteOrderMthod).toThrowError;
-            expect(wrongCallDeleteOrderMthod).toEqual('there is no order id for 5');
+        it('tests if (deleteOrder) method will return the custom error when an order id does not exist', async () => {
+            const wrongCallDeleteOrderMethod = await order.deleteOrder(5);
+            expect(wrongCallDeleteOrderMethod).toThrowError;
+            expect(wrongCallDeleteOrderMethod).toEqual('there is no order id for 5');
         });
         /*--------------------------------------------------------------------------------------------------------------------*/
-    //I ADDED THOSE TWO AT THE END SO I DO NOT HAVE TO CRETAE ANOTHER ORDER AGAN FOR THE GETTING THE TOTAL PRICE METHOD
+    //I ADDED THOSE TWO AT THE END SO I DO NOT HAVE TO CREATE ANOTHER ORDER AGAIN FOR THE GETTING THE TOTAL PRICE METHOD
     });
     it('tests the deleteOrder method to delete a certain order', async () => {
         const callDeleteOrderMethod = await order.deleteOrder(1);
@@ -114,9 +114,9 @@ describe('tests order module', () => {
     });
     /*--------------------------------------------------------------------------------------------------------------------*/
     it('tests if (getAllOrders) will return the custom error when there is no orders', async () => {
-        const wrongcallGetAllOrdersMthod = await order.getAllOrders();
-        expect(wrongcallGetAllOrdersMthod).toThrowError;
-        expect(wrongcallGetAllOrdersMthod).toEqual('There is no orders');
+        const wrongCallGetAllOrdersMethod = await order.getAllOrders();
+        expect(wrongCallGetAllOrdersMethod).toThrowError;
+        expect(wrongCallGetAllOrdersMethod).toEqual('There is no orders');
     });
     /*--------------------------------------------------------------------------------------------------------------------*/
 });

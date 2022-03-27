@@ -15,7 +15,7 @@ import { orderHeaderRoutes } from './controllers/order-header-route-handler';
 //importing dashboard routes
 import { dashBoardServiceRoutes } from './services/dashboard-route-handler';
 
-//initializing the express aplication and starting a server
+//initializing the express application and starting a server
 const app: express.Application = express();
 const  port: number = (process.env.PORT as unknown) as number || 2147;
 
@@ -23,7 +23,7 @@ app.listen(port, (): void => {
     console.log(`listening on port ${port}`);
 });
 
-//using the neccessary dependencies in the application object
+//using the necessary dependencies in the application object
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -45,5 +45,5 @@ orderHeaderRoutes(app);
 
 //dashboard routes
 dashBoardServiceRoutes(app);
-//exporting the express aplication to use in when testing on modules endpoints
+//exporting the express application to use in when testing on modules endpoints
 export default app;

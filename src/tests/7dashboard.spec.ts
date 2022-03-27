@@ -10,11 +10,11 @@ describe('tests the dashboard service file', () => {
         await product.creating({
             name: 'Iphone 12 pro Max',
             price: '23000',
-            category: 'Electronics | Mobils',
+            category: 'Electronics | Mobile',
             color: 'Blue',
             description: null
         });
-        await op.addProuctToOrders({
+        await op.addProductToOrders({
             order_id: '3',
             product_id: '4',
             qty: 1,
@@ -25,6 +25,6 @@ describe('tests the dashboard service file', () => {
     it('tests the top5Products method to return most 5 products included in orders', async () => {
         const callTop5Products = await dashboard.top5Products();
         expect(callTop5Products).not.toThrowError;
-        expect(callTop5Products).not.toEqual('Oops! seems like there is no products orderd yet :(');
+        expect(callTop5Products).not.toEqual('Oops! seems like there is no products ordered yet :(');
     });
 });

@@ -4,10 +4,10 @@ import app from '../server.js';
 import  jwt  from 'jsonwebtoken';
 
 const request = supertest(app);
-const secretSignture = process.env.SECRET_SIGNTURE as string;
+const secretSignature = process.env.SECRET_SIGNATURE as string;
 describe('tests the users endpoints', () => {
-    //creating a new jwt for each time an endpoint testing run that requires jwt authntication.
-    const jwtToken = jwt.sign('just for testing on endpoints', secretSignture);
+    //creating a new jwt for each time an endpoint testing run that requires jwt authentication.
+    const jwtToken = jwt.sign('just for testing on endpoints', secretSignature);
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     it('tests the POST /users endpoint to create a new user and give back a jwt token', async () => {
         const response = await request.post('/users')
@@ -54,7 +54,7 @@ describe('tests the users endpoints', () => {
         expect(response.body).toEqual('Incorrect Password! :(');
     });
     /*---------------------------------------------------------------------------------------------------------------------------------*/
-    it('tests if POST /users/auth will authnticate user only if password is correct and return back a token and a success message',
+    it('tests if POST /users/auth will authenticate user only if password is correct and return back a token and a success message',
     async () => {
         const response = await request.post('/users/auth')
         .send({
